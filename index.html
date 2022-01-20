@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist helper</title>
+</head>
+<style>
+
+body{
+    background-color: antiquewhite;
+}
+
+.main_wrap{
+
+    width: 64vw;
+    margin: auto;
+    overflow: hidden;
+}
+
+#main_wall{
+    position: relative;
+    height: 34vw;
+    background-color: antiquewhite;
+    border: 2px solid black;
+    overflow: hidden;
+}
+
+#main_img{
+    display: block;
+    width: 30%;
+    box-shadow: 0 0 0.5vw black;
+    margin: auto;
+    margin-top: 5vw;
+
+}
+
+
+
+#ref_img{
+    display: none;
+    position: absolute;
+    height: 30vw;
+    width: auto;
+    margin: auto;
+    bottom: 0;
+    top: 0;
+    left: 100%;
+    right: 0;
+    margin-left: -13vw;
+    margin-bottom: 1vw;
+}
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+    color: white;
+    background-color: black;
+}
+
+canvas{
+   display: none;
+}
+
+.color_thumb{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    margin: 2px;
+}
+
+.color_thumb:hover{
+
+    cursor: pointer;
+
+}
+
+.color_thumb:active{
+
+border-color: white;
+
+}
+
+#pallet_block{
+    display: inline-block;
+    margin: 10px;
+}
+
+.control_wrap{
+    display: inline-block;
+    margin: 4px;
+    border: 1px solid gray;
+    padding: 10px;
+    overflow: hidden;
+}
+
+#width-input{
+    width: 60px;
+}
+
+#width_wrap{
+    display: none;
+}
+
+.floor_hr{
+    position: absolute;
+    bottom: 0;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: -4vw;
+    height: 0px;
+    border: gray solid 1px;
+    z-index: 0;
+
+}
+
+#paint_list li{
+
+margin-top: 4px;
+font-size: 20px;
+
+}
+
+#paint_list li:hover{
+
+cursor: pointer;
+color: blue;
+
+}
+
+#paint_list li:active{
+
+cursor: pointer;
+color: blue;
+font-weight: bold;
+
+}
+
+#paint_list{
+    
+}
+
+#paint_list ol{
+    display: inline-block;
+    vertical-align: top;
+}
+
+#list_loading, #load_info{
+    color: red;
+    font-weight: bold;
+}
+
+</style>
+<body>
+<div class="main_wrap">
+<h1 class="head_h1">Artist helper</h1>
+    <div id="main_wall">
+
+        <div class="img_wrap">
+
+            <img id="main_img" src="img/LandscapeWithACarriage.jpg">
+
+        </div>
+
+<hr class="floor_hr"/>
+ 
+
+            <img id="ref_img" src="img/ref_img.png">
+ 
+
+    </div>
+<div>
+<br/>
+
+<span class="control_wrap">
+    <div id="load_info"></div>
+    <label for="file-upload" class="custom-file-upload">
+       Upload
+    </label>
+    <input id="file-upload" type="file"/>
+</span>
+<span class="control_wrap">
+    <label for="frame_inp">
+        Frame:
+      </label>
+ <input id="frame_inp" type="checkbox" onchange="addFrame(event);">
+</span>
+<span class="control_wrap">
+    <label for="scale_image">
+        Reference image:
+      </label>
+ <input id="scale_image" type="checkbox" onchange="referImage(event);">
+</span>
+    <span class="control_wrap" id="width_wrap">
+        <label for="width-input">
+            Width (cm):
+         </label>
+    <input id="width-input" value="50" type="number" min="2" oninput="scale();" />
+    </span>
+
+    <span class="control_wrap">
+        <label>
+           Custom color:
+         </label>
+        <input type="color" value="#ffffff" oninput="useCustomColor(event);">
+    <div id="pallet_block"></div>
+        </span>
+
+     
+</div>
+<br/>
+
+<div id="paint_list">
+<span id="list_loading"></span>
+<br/>
+<ol>
+<li onclick="showPicture(event)" data-src="TheBirthofVenus.jpg" data-width="279">"The Birth of Venus", 1486, Sandro Botticelli, w:279</li>
+<li onclick="showPicture(event)" data-src="VitruvianMan.jpg" data-width="25">"Vitruvian Man", 1492, Leonardo da Vinci, w:25</li>
+<li onclick="showPicture(event)" data-src="YoungHare.jpg" data-width="23">"Young Hare", 1502, Albrecht Dürer, w:23</li>
+<li onclick="showPicture(event)" data-src="PrayingHands.jpg" data-width="20">"Praying Hands", 1508, Albrecht Dürer, w:20</li>
+<li onclick="showPicture(event)" data-src="TheCreationofAdam.jpg" data-width="570">"The Creation of Adam", 1512, Michelangelo Buonarroti, w:570</li>
+<li onclick="showPicture(event)" data-src="SistineMadonna.jpg" data-width="196">"Sistine Madonna", 1514, Raffaello Sanzio, w:196</li>
+<li onclick="showPicture(event)" data-src="ViewofDelft.jpg" data-width="116">"View of Delft", 1661, Johannes Vermeer, w:116</li>
+<li onclick="showPicture(event)" data-src="TheNinthWave.jpg" data-width="332">"The Ninth Wave", 1850, Ivan Aivazovsky, w:332</li>
+<li onclick="showPicture(event)" data-src="BouquetDePrintemps.jpg" data-width="80">"Bouquet de printemps", 1866, Pierre-Auguste Renoir, w:80</li>
+<li onclick="showPicture(event)" data-src="StillLifeWithKettle.jpg" data-width="81">"Still life with kettle", 1869, Paul Cézanne, w:81</li>
+<li onclick="showPicture(event)" data-src="Sunrise.jpg" data-width="63">"Impression, Sunrise", 1872, Claude Monet, w:63</li>
+<li onclick="showPicture(event)" data-src="Rye.jpg" data-width="187">"Rye", 1878, Ivan Shishkin, w:187</li>
+<li onclick="showPicture(event)" data-src="StillLifeWithBible.jpg" data-width="79">"Still Life with Bible", 1885, Vincent van Gogh, w:79</li>
+<li onclick="showPicture(event)" data-src="ASundayAfternoon.png" data-width="308">"A Sunday Afternoon", 1886, Georges Seurat, w:308</li>
+</ol>
+<ol>
+<li onclick="showPicture(event)" data-src="JasDeBouffan.jpg" data-width="90">"Jas de Bouffan", 1887, Paul Cézanne, w:90</li>
+<li onclick="showPicture(event)" data-src="TerraceAtNight.jpg" data-width="66">"Café Terrace at Night", 1888, Vincent van Gogh, w:66</li>
+<li onclick="showPicture(event)" data-src="FishingBoats.jpg" data-width="81">"Fishing Boats", 1888, Vincent van Gogh, w:81</li>
+<li onclick="showPicture(event)" data-src="TheStarryNight.jpg" data-width="92">"The Starry Night", 1889, Vincent van Gogh, w:92</li>
+<li onclick="showPicture(event)" data-src="LandscapeWithACarriage.jpg" data-width="90">"Landscape with a Carriage", 1890, Vincent van Gogh, w:90</li>
+<li onclick="showPicture(event)" data-src="WheatfieldWithCrows.jpg" data-width="103">"Wheatfield with Crows", 1890, Vincent van Gogh, w:103</li>
+<li onclick="showPicture(event)" data-src="Bogatyrs.jpg" data-width="446">"Bogatyrs", 1898, Viktor Vasnetsov, w:446</li>
+<li onclick="showPicture(event)" data-src="SuprematistComposition.jpg" data-width="71">"Suprematist Composition", 1916, Kazimir Malevich, w:71</li>
+<li onclick="showPicture(event)" data-src="ThePersistenceOfMemory.jpg" data-width="33">"The Persistence of Memory", 1931, Salvador Dalí, w:33</li>
+<li onclick="showPicture(event)" data-src="TheMidnightRide.jpg" data-width="100">"The Midnight Ride of Paul Revere", 1931, Grant Wood, w:100</li>
+<li onclick="showPicture(event)" data-src="FallPlowing.jpg" data-width="104">"Fall Plowing", 1931, Grant Wood, w:104</li>
+<li onclick="showPicture(event)" data-src="ClassicLandscape.jpg" data-width="82">"Classic Landscape", 1931, Charles Sheeler, w:82</li>
+<li onclick="showPicture(event)" data-src="YankeeClipper.jpg" data-width="71">"Yankee Clipper", 1939, Charles Sheeler, w:71</li>
+</ol>
+</div>
+
+</div> 
+<canvas id="canv_1" style="display: none;"></canvas>
+
+
+</body>
+<script src="js/chroma.min.js"></script>
+<script src="js/KolorWheel.min.js"></script>
+<script>
+
+window.onload = function(){
+
+
+}
+
+
+// function reqListener(){
+
+// }            
+
+// var oReq = new XMLHttpRequest();
+// oReq.addEventListener("load", reqListener);
+// oReq.open("POST", "/img/LandscapeWithACarriage.jpg");
+// oReq.send();
+
+document.getElementById('file-upload').onchange = function (e) {
+  
+    var files = e.target.files;
+
+
+
+    // FileReader support
+    if (FileReader && files && files.length) {
+        document.getElementById("load_info").innerText = "Loading " + files[0].name + " ...";
+        
+        var fr = new FileReader();
+        fr.onload = function () {
+
+        var img = new Image();
+        
+        img.onload = function(){
+
+            
+            
+            document.getElementById("main_img").src = fr.result;
+            document.getElementById("load_info").innerText = "";
+
+            document.getElementById("main_wall").style.backgroundColor = "antiquewhite";
+
+            if(this.height > this.width){
+
+                document.getElementById("main_img").style.width = "auto";
+                document.getElementById("main_img").style.height = "17vw";
+
+            }
+
+            document.getElementById("ref_img").height = "30vw";
+            document.getElementById("ref_img").style.height = "30vw";
+            document.getElementById("ref_img").width = "auto";
+            document.getElementById("ref_img").style.width = "auto";
+            document.getElementById("width-input").value = 50;
+
+            scale();
+
+    canvas.width = img.width * devicePixelRatio;
+	canvas.height = img.height * devicePixelRatio;
+	canvas.style.width = `${img.width}px`;
+	canvas.style.height = `${img.height}px`;
+            render(img, () => {
+	      	console.log("OK");
+	        });
+
+        };
+          
+        img.src = fr.result;
+            
+        }
+        fr.readAsDataURL(files[0]);
+    } else {
+        
+    }
+}
+
+var main_colors = [];
+
+const SPACE = 30;
+const N = 7;
+const WAIT = 2000;
+
+const canvas = document.getElementById("canv_1");
+const ctx = canvas.getContext("2d");
+
+const getColor = (s) => {
+	const P = JSON.parse(s);
+	return `rgb(${P[0]}, ${P[1]}, ${P[2]})`;
+};
+const renderColors = (A, dx, dy, dw, dh, cb) => {
+
+    main_colors = [];
+
+	const pad = dh / A.length;
+	for (let i = 0; i < A.length; ++i) {
+		ctx.beginPath();
+		const color = getColor(A[i]);
+		const sz = pad - SPACE;
+		ctx.fillStyle = color;
+		ctx.rect(dx - pad, dy + pad * i, sz, sz);
+		ctx.fill();
+        main_colors.push(color);
+	}
+    draw_pallet();
+	if (cb) setTimeout(cb, WAIT);
+};
+
+const filter = (dx, dy, dw, dh, cb) => {
+	const data = ctx.getImageData(dx, dy, dw, dh);
+	const pixels = data.data;
+	const C = {};
+	for (let i = 0; i < dw * dh; ++i) {
+		const j = i << 2;
+		const P = [pixels[j + 0], pixels[j + 1], pixels[j + 2]];
+		const k = JSON.stringify(P);
+		C[k] = C[k] ? C[k] + 1 : 1;
+	}
+	const D = Object.keys(C).sort((a, b) => C[b] - C[a]);
+	const CVs = [];
+	const n = N + 1;
+	for (let i = 0; i < n; ++i) {
+		const j = ((D.length / n) * i) | 0;
+		CVs.push(D[j]);
+	}
+	for (let i = 0; i < dw * dh; ++i) {
+		const j = i << 2;
+		const P = [pixels[j + 0], pixels[j + 1], pixels[j + 2]];
+		let Z;
+		let d = Number.MAX_SAFE_INTEGER;
+		for (let cv of CVs) {
+			const Q = JSON.parse(cv);
+			const z =
+				Math.abs(P[0] - Q[0]) + Math.abs(P[1] - Q[1]) + Math.abs(P[2] - Q[2]);
+			if (z < d) {
+				d = z;
+				Z = Q;
+			}
+		}
+		pixels[j + 0] = Z[0];
+		pixels[j + 1] = Z[1];
+		pixels[j + 2] = Z[2];
+	}
+	//ctx.putImageData(data, dx, dy + dh + SPACE);
+	//document.body.style.backgroundColor = getColor(CVs[0]);
+	renderColors(CVs.slice(1), dx, dy, dw, dh * 2 + SPACE + SPACE, cb);
+    
+};
+
+
+const render = (img, cb) => {
+	if (img.width < 1 || img.height < 1) return;
+	const sh = Math.min(img.height, canvas.height / devicePixelRatio);
+	const sy = img.height < canvas.height ? 0 : (img.height - canvas.height) / 2;
+	const dh = Math.min((canvas.height / 2 - SPACE / 2 - SPACE) | 0, img.height);
+	const dy = dh < canvas.height ? (canvas.height - dh) / 2 : 0;
+	const sw = Math.min(img.width, canvas.width / devicePixelRatio);
+	const sx = img.width < canvas.width ? 0 : (img.width - canvas.width) / 2;
+	const dw = Math.min(img.width, canvas.width);
+	const dx =
+		dw < canvas.width ? (canvas.width - dw) / 2 + dh / N + SPACE / 4 : 0;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.beginPath();
+	ctx.drawImage(img, sx, sy, sw, sh, dx, dy - dh / 2 - SPACE / 2, dw, dh);
+	filter(dx, dy - dh / 2 - SPACE / 2, dw, dh, cb);
+};
+
+var fit_colors = [];
+
+function draw_pallet(){
+    fit_colors = [];
+    fit_colors = chroma
+    .scale(main_colors)
+    .colors(8);
+
+    document.getElementById('pallet_block').innerHTML = "";
+
+    var fit_colors_new = [];
+
+    fit_colors.forEach(element => {
+
+var base = new KolorWheel(element);
+  
+var h = 0;
+
+var hsl = base.getHsl();
+
+for (var n = 0; n < 5; n++) {
+
+  var color = new KolorWheel([hsl[0]+h,hsl[1],hsl[2]]);
+  
+  h += 45;
+
+  fit_colors_new.push(color.getHex());
+
+} 
+        
+
+    });
+
+
+    fit_colors_new.forEach(element => {
+        
+        document.getElementById('pallet_block').innerHTML+="<span onclick='useColor(event);' class='color_thumb' style='background-color:"+element+";'></span>";
+
+    });
+
+  
+}
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function useColor(e){
+
+    var color = e.target.style.backgroundColor;
+    
+    document.getElementById("main_wall").style.backgroundColor = color;
+}
+
+
+function useCustomColor(e){
+
+    var color = e.target.value;
+    
+    document.getElementById("main_wall").style.backgroundColor = color;
+
+}
+
+function referImage(e){
+
+if(e.target.checked == true){
+    document.getElementById("ref_img").style.display = "block";
+}else{
+    document.getElementById("ref_img").style.display = "none";
+}
+
+scale();
+
+}
+
+
+function scale(){
+
+var main_img_w_coef = document.getElementById("ref_img").height / 182;
+
+var wh_coef = document.getElementById("main_img").height / document.getElementById("main_img").width;
+
+var new_w = (document.getElementById("width-input").value * main_img_w_coef);
+
+var new_h = new_w * wh_coef;
+
+var ref_w = document.getElementById("ref_img").width;
+
+var ref_h = document.getElementById("ref_img").height;
+
+if(document.getElementById("scale_image").checked == true){
+
+    document.getElementById("width_wrap").style.display = "inline-block";
+    
+document.getElementById("main_img").height = "auto";    
+document.getElementById("main_img").style.height = "auto"; 
+
+var _vw =  window.innerWidth / new_w;
+
+vw = 100/_vw;
+
+
+
+if(new_h < ref_h-80){   
+    document.getElementById("main_img").style.marginTop = "5vw";
+
+    document.getElementById("main_img").width = vw + "vw";
+    document.getElementById("main_img").style.width = vw + "vw";
+    
+    document.getElementById("ref_img").height = "30vw";
+    document.getElementById("ref_img").style.height = "30vw";
+
+}else{
+
+    document.getElementById("main_img").style.marginTop = "2vw";
+
+    document.getElementById("main_img").width = "auto";
+    document.getElementById("main_img").style.width = "auto";
+    document.getElementById("main_img").height = "25vw";
+    document.getElementById("main_img").style.height = "25vw";
+
+    var img_w_coef = document.getElementById("main_img").width / document.getElementById("width-input").value;
+    
+    document.getElementById("ref_img").height = 182 * img_w_coef + "px";
+    document.getElementById("ref_img").style.height = 182 * img_w_coef + "px";
+    
+
+}
+
+}else{
+
+    document.getElementById("width_wrap").style.display = "none";
+
+}
+
+window.onresize = function(){ scale() };
+
+}
+
+
+function addFrame(e){
+
+    if(document.getElementById("frame_inp").checked == true){
+
+        document.getElementById("main_img").style.border = "1vw groove #402607";
+
+    }else{
+
+        document.getElementById("main_img").style.border = "none";
+
+    }
+
+
+}
+
+function showPicture(e){
+
+const Items = document.querySelectorAll("#paint_list li");
+
+Items.forEach(function(Item) {
+Item.style.color = "black"; 
+
+});
+
+e.target.style.color = "blue";    
+
+if(e.target.attributes['data-width'].value){
+document.getElementById("width-input").value = Number(e.target.attributes['data-width'].value);
+
+document.getElementById("main_img").src = "img/"+e.target.attributes['data-src'].value;
+
+document.getElementById("list_loading").innerText = "Loading...";
+
+document.getElementById("main_img").onload = function(){
+
+    
+    
+
+    document.getElementById("scale_image").checked = true;
+    document.getElementById("ref_img").style.display = "block";
+
+    scale();
+    document.getElementById("main_wall").style.backgroundColor = "antiquewhite";
+
+
+    var img = new Image();
+
+    img.onload = function(){
+    
+
+    canvas.width = img.width * devicePixelRatio;
+	canvas.height = img.height * devicePixelRatio;
+	canvas.style.width = `${img.width}px`;
+	canvas.style.height = `${img.height}px`;
+
+    document.getElementById("list_loading").innerText = "";
+
+    render(img, () => {
+	      	console.log("OK");
+              
+	    });
+
+    }
+
+    
+    img.src = document.getElementById("main_img").src;
+}
+
+}
+}
+
+
+
+</script>
+
+</html>
