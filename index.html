@@ -1,314 +1,593 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artist helper</title>
-</head>
-<style>
+  </head>
+  <style>
+    body {
+      background-color: antiquewhite;
+    }
 
-body{
-    background-color: antiquewhite;
-}
+    .main_wrap {
+      width: 64vw;
+      margin: auto;
+      overflow: hidden;
+    }
 
-.main_wrap{
+    #main_wall {
+      position: relative;
+      height: 34vw;
+      background-color: antiquewhite;
+      border: 2px solid black;
+      overflow: hidden;
+    }
 
-    width: 64vw;
-    margin: auto;
-    overflow: hidden;
-}
+    #main_img {
+      display: block;
+      width: 30%;
+      box-shadow: 0 0 0.5vw black;
+      margin: auto;
+      margin-top: 5vw;
+    }
 
-#main_wall{
-    position: relative;
-    height: 34vw;
-    background-color: antiquewhite;
-    border: 2px solid black;
-    overflow: hidden;
-}
+    #ref_img {
+      display: none;
+      position: absolute;
+      height: 30vw;
+      width: auto;
+      margin: auto;
+      bottom: 0;
+      top: 0;
+      left: 100%;
+      right: 0;
+      margin-left: -13vw;
+      margin-bottom: 1vw;
+    }
 
-#main_img{
-    display: block;
-    width: 30%;
-    box-shadow: 0 0 0.5vw black;
-    margin: auto;
-    margin-top: 5vw;
+    input[type="file"] {
+      display: none;
+    }
+    .custom-file-upload {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      cursor: pointer;
+      color: white;
+      background-color: black;
+    }
 
-}
+    canvas {
+      display: none;
+    }
 
+    .color_thumb {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid black;
+      margin: 2px;
+    }
 
+    .color_thumb:hover {
+      cursor: pointer;
+    }
 
-#ref_img{
-    display: none;
-    position: absolute;
-    height: 30vw;
-    width: auto;
-    margin: auto;
-    bottom: 0;
-    top: 0;
-    left: 100%;
-    right: 0;
-    margin-left: -13vw;
-    margin-bottom: 1vw;
-}
+    .color_thumb:active {
+      border-color: white;
+    }
 
-input[type="file"] {
-    display: none;
-}
-.custom-file-upload {
+    #pallet_block {
+      display: inline-block;
+      margin: 10px;
+    }
 
-    display: inline-block;
-    padding: 6px 12px;
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    cursor: pointer;
-    color: white;
-    background-color: black;
-}
+    .control_wrap {
+      display: inline-block;
+      margin: 4px;
+      border: 1px solid gray;
+      padding: 10px;
+      overflow: hidden;
+    }
 
-canvas{
-   display: none;
-}
+    #width-input {
+      width: 60px;
+    }
 
-.color_thumb{
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid black;
-    margin: 2px;
-}
+    #width_wrap {
+      display: none;
+    }
 
-.color_thumb:hover{
+    #margin_wrap {
+      display: none;
+    }
 
-    cursor: pointer;
+    .floor_hr {
+      position: absolute;
+      bottom: 0;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: -4vw;
+      height: 0px;
+      border: gray solid 1px;
+      z-index: 0;
+    }
 
-}
+    #paint_list li {
+      margin-top: 4px;
+      font-size: 20px;
+    }
 
-.color_thumb:active{
+    #paint_list li:hover {
+      cursor: pointer;
+      color: blue;
+    }
 
-border-color: white;
+    #paint_list li:active {
+      cursor: pointer;
+      color: blue;
+      font-weight: bold;
+    }
 
-}
+    #paint_list {
+    }
 
-#pallet_block{
-    display: inline-block;
-    margin: 10px;
-}
+    #paint_list ol {
+      display: inline-block;
+      vertical-align: top;
+    }
 
-.control_wrap{
-    display: inline-block;
-    margin: 4px;
-    border: 1px solid gray;
-    padding: 10px;
-    overflow: hidden;
-}
-
-#width-input{
-    width: 60px;
-}
-
-#width_wrap{
-    display: none;
-}
-
-.floor_hr{
-    position: absolute;
-    bottom: 0;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: -4vw;
-    height: 0px;
-    border: gray solid 1px;
-    z-index: 0;
-
-}
-
-#paint_list li{
-
-margin-top: 4px;
-font-size: 20px;
-
-}
-
-#paint_list li:hover{
-
-cursor: pointer;
-color: blue;
-
-}
-
-#paint_list li:active{
-
-cursor: pointer;
-color: blue;
-font-weight: bold;
-
-}
-
-#paint_list{
-    
-}
-
-#paint_list ol{
-    display: inline-block;
-    vertical-align: top;
-}
-
-#list_loading, #load_info{
-    color: red;
-    font-weight: bold;
-}
-
-</style>
-<body>
-<div class="main_wrap">
-<h1 class="head_h1">Artist helper</h1>
-    <div id="main_wall">
-
+    #list_loading,
+    #load_info {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+  <body>
+    <div class="main_wrap">
+      <h1 class="head_h1">Artist helper</h1>
+      <div id="main_wall">
         <div class="img_wrap">
-
-            <img id="main_img" src="img/LandscapeWithACarriage.jpg">
-
+          <img id="main_img" src="img/LandscapeWithACarriage.jpg" />
         </div>
 
-<hr class="floor_hr"/>
- 
+        <hr class="floor_hr" />
 
-            <img id="ref_img" src="img/ref_img.png">
- 
+        <img id="ref_img" src="img/ref_img.png" />
+      </div>
+      <div>
+        <br />
 
-    </div>
-<div>
-<br/>
-
-<span class="control_wrap">
-    <div id="load_info"></div>
-    <label for="file-upload" class="custom-file-upload">
-       Upload
-    </label>
-    <input id="file-upload" type="file"/>
-</span>
-<span class="control_wrap">
-    <label for="frame_inp">
-        Frame:
-      </label>
- <input id="frame_inp" type="checkbox" onchange="addFrame(event);">
-</span>
-<span class="control_wrap">
-    <label for="scale_image">
-        Reference image:
-      </label>
- <input id="scale_image" type="checkbox" onchange="referImage(event);">
-</span>
-    <span class="control_wrap" id="width_wrap">
-        <label for="width-input">
-            Width (cm):
-         </label>
-    <input id="width-input" value="50" type="number" min="2" oninput="scale();" />
-    </span>
-
-    <span class="control_wrap">
-        <label>
-           Custom color:
-         </label>
-        <input type="color" value="#ffffff" oninput="useCustomColor(event);">
-    <div id="pallet_block"></div>
+        <span class="control_wrap">
+          <div id="load_info"></div>
+          <label for="file-upload" class="custom-file-upload"> Upload </label>
+          <input id="file-upload" type="file" />
+        </span>
+        <span class="control_wrap">
+          <label for="frame_inp"> Frame: </label>
+          <input id="frame_inp" type="checkbox" onchange="addFrame(event);" />
+        </span>
+        <span class="control_wrap">
+          <label for="scale_image"> Reference image: </label>
+          <input
+            id="scale_image"
+            type="checkbox"
+            onchange="referImage(event);"
+          />
+        </span>
+        <span class="control_wrap" id="width_wrap">
+          <label for="width-input"> Width (cm): </label>
+          <input
+            id="width-input"
+            value="50"
+            type="number"
+            min="2"
+            oninput="scale();"
+          />
+        </span>
+        <span class="control_wrap" id="margin_wrap">
+          <label> Margin: </label>
+          <button
+            onclick="marginM();"
+          >-</button>
+          <button
+            onclick="marginP();"
+          >+</button>
         </span>
 
-     
-</div>
-<br/>
+        <span class="control_wrap">
+          <label> Custom color: </label>
+          <input
+            type="color"
+            value="#ffffff"
+            oninput="useCustomColor(event);"
+          />
+          <div id="pallet_block"></div>
+        </span>
+      </div>
+      <br />
 
-<div id="paint_list">
-<span id="list_loading"></span>
-<br/>
-<ol>
-<li onclick="showPicture(event)" data-src="TheBirthofVenus.jpg" data-width="279">"The Birth of Venus", 1486, Sandro Botticelli, w:279</li>
-<li onclick="showPicture(event)" data-src="VitruvianMan.jpg" data-width="25">"Vitruvian Man", 1492, Leonardo da Vinci, w:25</li>
-<li onclick="showPicture(event)" data-src="YoungHare.jpg" data-width="23">"Young Hare", 1502, Albrecht Dürer, w:23</li>
-<li onclick="showPicture(event)" data-src="PrayingHands.jpg" data-width="20">"Praying Hands", 1508, Albrecht Dürer, w:20</li>
-<li onclick="showPicture(event)" data-src="TheCreationofAdam.jpg" data-width="570">"The Creation of Adam", 1512, Michelangelo Buonarroti, w:570</li>
-<li onclick="showPicture(event)" data-src="SistineMadonna.jpg" data-width="196">"Sistine Madonna", 1514, Raffaello Sanzio, w:196</li>
-<li onclick="showPicture(event)" data-src="ViewofDelft.jpg" data-width="116">"View of Delft", 1661, Johannes Vermeer, w:116</li>
-<li onclick="showPicture(event)" data-src="TheNinthWave.jpg" data-width="332">"The Ninth Wave", 1850, Ivan Aivazovsky, w:332</li>
-<li onclick="showPicture(event)" data-src="BouquetDePrintemps.jpg" data-width="80">"Bouquet de printemps", 1866, Pierre-Auguste Renoir, w:80</li>
-<li onclick="showPicture(event)" data-src="StillLifeWithKettle.jpg" data-width="81">"Still life with kettle", 1869, Paul Cézanne, w:81</li>
-<li onclick="showPicture(event)" data-src="Sunrise.jpg" data-width="63">"Impression, Sunrise", 1872, Claude Monet, w:63</li>
-<li onclick="showPicture(event)" data-src="Rye.jpg" data-width="187">"Rye", 1878, Ivan Shishkin, w:187</li>
-<li onclick="showPicture(event)" data-src="StillLifeWithBible.jpg" data-width="79">"Still Life with Bible", 1885, Vincent van Gogh, w:79</li>
-<li onclick="showPicture(event)" data-src="ASundayAfternoon.png" data-width="308">"A Sunday Afternoon", 1886, Georges Seurat, w:308</li>
-</ol>
-<ol>
-<li onclick="showPicture(event)" data-src="JasDeBouffan.jpg" data-width="90">"Jas de Bouffan", 1887, Paul Cézanne, w:90</li>
-<li onclick="showPicture(event)" data-src="TerraceAtNight.jpg" data-width="66">"Café Terrace at Night", 1888, Vincent van Gogh, w:66</li>
-<li onclick="showPicture(event)" data-src="FishingBoats.jpg" data-width="81">"Fishing Boats", 1888, Vincent van Gogh, w:81</li>
-<li onclick="showPicture(event)" data-src="TheStarryNight.jpg" data-width="92">"The Starry Night", 1889, Vincent van Gogh, w:92</li>
-<li onclick="showPicture(event)" data-src="LandscapeWithACarriage.jpg" data-width="90">"Landscape with a Carriage", 1890, Vincent van Gogh, w:90</li>
-<li onclick="showPicture(event)" data-src="WheatfieldWithCrows.jpg" data-width="103">"Wheatfield with Crows", 1890, Vincent van Gogh, w:103</li>
-<li onclick="showPicture(event)" data-src="Bogatyrs.jpg" data-width="446">"Bogatyrs", 1898, Viktor Vasnetsov, w:446</li>
-<li onclick="showPicture(event)" data-src="SuprematistComposition.jpg" data-width="71">"Suprematist Composition", 1916, Kazimir Malevich, w:71</li>
-<li onclick="showPicture(event)" data-src="ThePersistenceOfMemory.jpg" data-width="33">"The Persistence of Memory", 1931, Salvador Dalí, w:33</li>
-<li onclick="showPicture(event)" data-src="TheMidnightRide.jpg" data-width="100">"The Midnight Ride of Paul Revere", 1931, Grant Wood, w:100</li>
-<li onclick="showPicture(event)" data-src="FallPlowing.jpg" data-width="104">"Fall Plowing", 1931, Grant Wood, w:104</li>
-<li onclick="showPicture(event)" data-src="ClassicLandscape.jpg" data-width="82">"Classic Landscape", 1931, Charles Sheeler, w:82</li>
-<li onclick="showPicture(event)" data-src="YankeeClipper.jpg" data-width="71">"Yankee Clipper", 1939, Charles Sheeler, w:71</li>
-</ol>
-</div>
+      <div id="paint_list">
+        <span id="list_loading"></span>
+        <br />
+        <ol>
+          <li
+            onclick="showPicture(event)"
+            data-src="TheBirthofVenus.jpg"
+            data-width="279"
+          >
+            "The Birth of Venus", 1486, Sandro Botticelli, w:279
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="LadywithErmine.jpg"
+            data-width="39"
+          >
+            "Lady with an Ermine", 1491, Leonardo da Vinci, w:39
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="VitruvianMan.jpg"
+            data-width="25"
+          >
+            "Vitruvian Man", 1492, Leonardo da Vinci, w:25
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="YoungHare.jpg"
+            data-width="23"
+          >
+            "Young Hare", 1502, Albrecht Dürer, w:23
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="PrayingHands.jpg"
+            data-width="20"
+          >
+            "Praying Hands", 1508, Albrecht Dürer, w:20
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="SleepingVenus.jpg"
+            data-width="175"
+          >
+            "Sleeping Venus", 1510, Titian, w:175
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="TheCreationofAdam.jpg"
+            data-width="570"
+          >
+            "The Creation of Adam", 1512, Michelangelo Buonarroti, w:570
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="SistineMadonna.jpg"
+            data-width="196"
+          >
+            "Sistine Madonna", 1514, Raffaello Sanzio, w:196
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="RokebyVenus.jpg"
+            data-width="177"
+          >
+            "Rokeby Venus", 1651, (Diego Velazquez), w:177
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="ViewofDelft.jpg"
+            data-width="116"
+          >
+            "View of Delft", 1661, Johannes Vermeer, w:116
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="ToiletofVenus.jpg"
+            data-width="85"
+          >
+            "The Toilet of Venus", 1751, François Boucher, w:85
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Patroclus.jpg"
+            data-width="170"
+          >
+            "Patroclus", 1780, Jacques-Louis David, w:170
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="ParisHelen.jpg"
+            data-width="146"
+          >
+            "Paris and Helen", 1788, Jacques-Louis David, w:146
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="MaleNude.jpg"
+            data-width="80"
+          >
+            "Male Nude", 1801, Jean Auguste Dominique Ingres, w:80
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="TelemachusEucharis.jpg"
+            data-width="103"
+          >
+            "Telemachus and Eucharis", 1818, Jacques-Louis David, w:103
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="TheNinthWave.jpg"
+            data-width="332"
+          >
+            "The Ninth Wave", 1850, Ivan Aivazovsky, w:332
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Spring.jpg"
+            data-width="80"
+          >
+            "The Spring", 1856, Jean Auguste Dominique Ingres, w:80
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="BouquetDePrintemps.jpg"
+            data-width="80"
+          >
+            "Bouquet de printemps", 1866, Pierre-Auguste Renoir, w:80
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="StillLifeWithKettle.jpg"
+            data-width="81"
+          >
+            "Still life with kettle", 1869, Paul Cézanne, w:81
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Sunrise.jpg"
+            data-width="63"
+          >
+            "Impression, Sunrise", 1872, Claude Monet, w:63
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="SermononMount.jpg"
+            data-width="92"
+          >
+            "The Sermon on the Mount", 1877, Carl Bloch, w:92
+          </li>
+          <li onclick="showPicture(event)" data-src="Rye.jpg" data-width="187">
+            "Rye", 1878, Ivan Shishkin, w:187
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="StillLifeWithBible.jpg"
+            data-width="79"
+          >
+            "Still Life with Bible", 1885, Vincent van Gogh, w:79
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="ASundayAfternoon.png"
+            data-width="308"
+          >
+            "A Sunday Afternoon", 1886, Georges Seurat, w:308
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="JasDeBouffan.jpg"
+            data-width="90"
+          >
+            "Jas de Bouffan", 1887, Paul Cézanne, w:90
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="TerraceAtNight.jpg"
+            data-width="66"
+          >
+            "Café Terrace at Night", 1888, Vincent van Gogh, w:66
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="FishingBoats.jpg"
+            data-width="81"
+          >
+            "Fishing Boats", 1888, Vincent van Gogh, w:81
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="TheStarryNight.jpg"
+            data-width="92"
+          >
+            "The Starry Night", 1889, Vincent van Gogh, w:92
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="LandscapeWithACarriage.jpg"
+            data-width="90"
+          >
+            "Landscape with a Carriage", 1890, Vincent van Gogh, w:90
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="WheatfieldWithCrows.jpg"
+            data-width="103"
+          >
+            "Wheatfield with Crows", 1890, Vincent van Gogh, w:103
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="LadyGodiva.jpg"
+            data-width="183"
+          >
+            "Lady Godiva", 1897, John Collier, w:183
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Bogatyrs.jpg"
+            data-width="446"
+          >
+            "Bogatyrs", 1898, Viktor Vasnetsov, w:446
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="InTepidarium.jpg"
+            data-width="49"
+          >
+            "In the Tepidarium", 1913, John William Godward, w:49
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="SuprematistComposition.jpg"
+            data-width="71"
+          >
+            "Suprematist Composition", 1916, Kazimir Malevich, w:71
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Bather.jpg"
+            data-width="100"
+          >
+            "Bather", 1925, Rene Magritte, w:100
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="FalseMirror.jpg"
+            data-width="81"
+          >
+            "The false mirror", 1928, Rene Magritte, w:81
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="ThePersistenceOfMemory.jpg"
+            data-width="33"
+          >
+            "The Persistence of Memory", 1931, Salvador Dalí, w:33
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="TheMidnightRide.jpg"
+            data-width="100"
+          >
+            "The Midnight Ride of Paul Revere", 1931, Grant Wood, w:100
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="FallPlowing.jpg"
+            data-width="104"
+          >
+            "Fall Plowing", 1931, Grant Wood, w:104
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="ClassicLandscape.jpg"
+            data-width="82"
+          >
+            "Classic Landscape", 1931, Charles Sheeler, w:82
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="YankeeClipper.jpg"
+            data-width="71"
+          >
+            "Yankee Clipper", 1939, Charles Sheeler, w:71
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Nighthawks.jpg"
+            data-width="152"
+          >
+            "Nighthawks", 1942, Edward Hopper, w:152
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Reptiles.jpg"
+            data-width="38"
+          >
+            "Reptiles", 1943, Maurits Escher, w:38
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="BlackMagic.jpg"
+            data-width="54"
+          >
+            "Black Magic", 1945, Rene Magritte, w:54
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="DrawingHands.png"
+            data-width="33"
+          >
+            "Drawing Hands", 1948, Maurits Escher, w:33
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="MissSylvania.jpg"
+            data-width="67"
+          >
+            "Miss Sylvania", mid 20th century, Gil Elvgren, w:67
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="Perfection.jpg"
+            data-width="61"
+          >
+            "Perfection", 1948, Gil Elvgren, w:61
+          </li>
+          <li
+            onclick="showPicture(event)"
+            data-src="LookingGlass.jpg"
+            data-width="76"
+          >
+            "The looking glass", 1963, Rene Magritte, w:76
+          </li>
+        </ol>
+      </div>
+    </div>
+    <canvas id="canv_1" style="display: none"></canvas>
+  </body>
+  <script src="js/chroma.min.js"></script>
+  <script src="js/KolorWheel.min.js"></script>
+  <script>
+    window.onload = function () {};
 
-</div> 
-<canvas id="canv_1" style="display: none;"></canvas>
+    // function reqListener(){
 
+    // }
 
-</body>
-<script src="js/chroma.min.js"></script>
-<script src="js/KolorWheel.min.js"></script>
-<script>
+    // var oReq = new XMLHttpRequest();
+    // oReq.addEventListener("load", reqListener);
+    // oReq.open("POST", "/img/LandscapeWithACarriage.jpg");
+    // oReq.send();
 
-window.onload = function(){
+    document.getElementById("file-upload").onchange = function (e) {
+      var files = e.target.files;
 
+      // FileReader support
+      if (FileReader && files && files.length) {
+        document.getElementById("load_info").innerText =
+          "Loading " + files[0].name + " ...";
 
-}
-
-
-// function reqListener(){
-
-// }            
-
-// var oReq = new XMLHttpRequest();
-// oReq.addEventListener("load", reqListener);
-// oReq.open("POST", "/img/LandscapeWithACarriage.jpg");
-// oReq.send();
-
-document.getElementById('file-upload').onchange = function (e) {
-  
-    var files = e.target.files;
-
-
-
-    // FileReader support
-    if (FileReader && files && files.length) {
-        document.getElementById("load_info").innerText = "Loading " + files[0].name + " ...";
-        
         var fr = new FileReader();
         fr.onload = function () {
+          var img = new Image();
 
-        var img = new Image();
-        
-        img.onload = function(){
-
-            
-            
+          img.onload = function () {
             document.getElementById("main_img").src = fr.result;
             document.getElementById("load_info").innerText = "";
 
-            document.getElementById("main_wall").style.backgroundColor = "antiquewhite";
+            document.getElementById("main_wall").style.backgroundColor =
+              "antiquewhite";
 
-            if(this.height > this.width){
-
-                document.getElementById("main_img").style.width = "auto";
-                document.getElementById("main_img").style.height = "17vw";
-
+            if (this.height > this.width) {
+              document.getElementById("main_img").style.width = "auto";
+              document.getElementById("main_img").style.height = "17vw";
             }
 
             document.getElementById("ref_img").height = "30vw";
@@ -319,333 +598,311 @@ document.getElementById('file-upload').onchange = function (e) {
 
             scale();
 
-    canvas.width = img.width * devicePixelRatio;
-	canvas.height = img.height * devicePixelRatio;
-	canvas.style.width = `${img.width}px`;
-	canvas.style.height = `${img.height}px`;
+            canvas.width = img.width * devicePixelRatio;
+            canvas.height = img.height * devicePixelRatio;
+            canvas.style.width = `${img.width}px`;
+            canvas.style.height = `${img.height}px`;
             render(img, () => {
-	      	console.log("OK");
-	        });
+              console.log("OK");
+            });
+          };
 
+          img.src = fr.result;
         };
-          
-        img.src = fr.result;
-            
-        }
         fr.readAsDataURL(files[0]);
-    } else {
-        
-    }
-}
+      } else {
+      }
+    };
 
-var main_colors = [];
+    var main_colors = [];
 
-const SPACE = 30;
-const N = 7;
-const WAIT = 2000;
+    const SPACE = 30;
+    const N = 7;
+    const WAIT = 2000;
 
-const canvas = document.getElementById("canv_1");
-const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("canv_1");
+    const ctx = canvas.getContext("2d");
 
-const getColor = (s) => {
-	const P = JSON.parse(s);
-	return `rgb(${P[0]}, ${P[1]}, ${P[2]})`;
-};
-const renderColors = (A, dx, dy, dw, dh, cb) => {
+    const getColor = (s) => {
+      const P = JSON.parse(s);
+      return `rgb(${P[0]}, ${P[1]}, ${P[2]})`;
+    };
+    const renderColors = (A, dx, dy, dw, dh, cb) => {
+      main_colors = [];
 
-    main_colors = [];
-
-	const pad = dh / A.length;
-	for (let i = 0; i < A.length; ++i) {
-		ctx.beginPath();
-		const color = getColor(A[i]);
-		const sz = pad - SPACE;
-		ctx.fillStyle = color;
-		ctx.rect(dx - pad, dy + pad * i, sz, sz);
-		ctx.fill();
+      const pad = dh / A.length;
+      for (let i = 0; i < A.length; ++i) {
+        ctx.beginPath();
+        const color = getColor(A[i]);
+        const sz = pad - SPACE;
+        ctx.fillStyle = color;
+        ctx.rect(dx - pad, dy + pad * i, sz, sz);
+        ctx.fill();
         main_colors.push(color);
-	}
-    draw_pallet();
-	if (cb) setTimeout(cb, WAIT);
-};
+      }
+      draw_pallet();
+      if (cb) setTimeout(cb, WAIT);
+    };
 
-const filter = (dx, dy, dw, dh, cb) => {
-	const data = ctx.getImageData(dx, dy, dw, dh);
-	const pixels = data.data;
-	const C = {};
-	for (let i = 0; i < dw * dh; ++i) {
-		const j = i << 2;
-		const P = [pixels[j + 0], pixels[j + 1], pixels[j + 2]];
-		const k = JSON.stringify(P);
-		C[k] = C[k] ? C[k] + 1 : 1;
-	}
-	const D = Object.keys(C).sort((a, b) => C[b] - C[a]);
-	const CVs = [];
-	const n = N + 1;
-	for (let i = 0; i < n; ++i) {
-		const j = ((D.length / n) * i) | 0;
-		CVs.push(D[j]);
-	}
-	for (let i = 0; i < dw * dh; ++i) {
-		const j = i << 2;
-		const P = [pixels[j + 0], pixels[j + 1], pixels[j + 2]];
-		let Z;
-		let d = Number.MAX_SAFE_INTEGER;
-		for (let cv of CVs) {
-			const Q = JSON.parse(cv);
-			const z =
-				Math.abs(P[0] - Q[0]) + Math.abs(P[1] - Q[1]) + Math.abs(P[2] - Q[2]);
-			if (z < d) {
-				d = z;
-				Z = Q;
-			}
-		}
-		pixels[j + 0] = Z[0];
-		pixels[j + 1] = Z[1];
-		pixels[j + 2] = Z[2];
-	}
-	//ctx.putImageData(data, dx, dy + dh + SPACE);
-	//document.body.style.backgroundColor = getColor(CVs[0]);
-	renderColors(CVs.slice(1), dx, dy, dw, dh * 2 + SPACE + SPACE, cb);
-    
-};
+    const filter = (dx, dy, dw, dh, cb) => {
+      const data = ctx.getImageData(dx, dy, dw, dh);
+      const pixels = data.data;
+      const C = {};
+      for (let i = 0; i < dw * dh; ++i) {
+        const j = i << 2;
+        const P = [pixels[j + 0], pixels[j + 1], pixels[j + 2]];
+        const k = JSON.stringify(P);
+        C[k] = C[k] ? C[k] + 1 : 1;
+      }
+      const D = Object.keys(C).sort((a, b) => C[b] - C[a]);
+      const CVs = [];
+      const n = N + 1;
+      for (let i = 0; i < n; ++i) {
+        const j = ((D.length / n) * i) | 0;
+        CVs.push(D[j]);
+      }
+      for (let i = 0; i < dw * dh; ++i) {
+        const j = i << 2;
+        const P = [pixels[j + 0], pixels[j + 1], pixels[j + 2]];
+        let Z;
+        let d = Number.MAX_SAFE_INTEGER;
+        for (let cv of CVs) {
+          const Q = JSON.parse(cv);
+          const z =
+            Math.abs(P[0] - Q[0]) +
+            Math.abs(P[1] - Q[1]) +
+            Math.abs(P[2] - Q[2]);
+          if (z < d) {
+            d = z;
+            Z = Q;
+          }
+        }
+        pixels[j + 0] = Z[0];
+        pixels[j + 1] = Z[1];
+        pixels[j + 2] = Z[2];
+      }
+      //ctx.putImageData(data, dx, dy + dh + SPACE);
+      //document.body.style.backgroundColor = getColor(CVs[0]);
+      renderColors(CVs.slice(1), dx, dy, dw, dh * 2 + SPACE + SPACE, cb);
+    };
 
+    const render = (img, cb) => {
+      if (img.width < 1 || img.height < 1) return;
+      const sh = Math.min(img.height, canvas.height / devicePixelRatio);
+      const sy =
+        img.height < canvas.height ? 0 : (img.height - canvas.height) / 2;
+      const dh = Math.min(
+        (canvas.height / 2 - SPACE / 2 - SPACE) | 0,
+        img.height
+      );
+      const dy = dh < canvas.height ? (canvas.height - dh) / 2 : 0;
+      const sw = Math.min(img.width, canvas.width / devicePixelRatio);
+      const sx = img.width < canvas.width ? 0 : (img.width - canvas.width) / 2;
+      const dw = Math.min(img.width, canvas.width);
+      const dx =
+        dw < canvas.width ? (canvas.width - dw) / 2 + dh / N + SPACE / 4 : 0;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.drawImage(img, sx, sy, sw, sh, dx, dy - dh / 2 - SPACE / 2, dw, dh);
+      filter(dx, dy - dh / 2 - SPACE / 2, dw, dh, cb);
+    };
 
-const render = (img, cb) => {
-	if (img.width < 1 || img.height < 1) return;
-	const sh = Math.min(img.height, canvas.height / devicePixelRatio);
-	const sy = img.height < canvas.height ? 0 : (img.height - canvas.height) / 2;
-	const dh = Math.min((canvas.height / 2 - SPACE / 2 - SPACE) | 0, img.height);
-	const dy = dh < canvas.height ? (canvas.height - dh) / 2 : 0;
-	const sw = Math.min(img.width, canvas.width / devicePixelRatio);
-	const sx = img.width < canvas.width ? 0 : (img.width - canvas.width) / 2;
-	const dw = Math.min(img.width, canvas.width);
-	const dx =
-		dw < canvas.width ? (canvas.width - dw) / 2 + dh / N + SPACE / 4 : 0;
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.beginPath();
-	ctx.drawImage(img, sx, sy, sw, sh, dx, dy - dh / 2 - SPACE / 2, dw, dh);
-	filter(dx, dy - dh / 2 - SPACE / 2, dw, dh, cb);
-};
+    var fit_colors = [];
 
-var fit_colors = [];
+    function draw_pallet() {
+      fit_colors = [];
+      fit_colors = chroma.scale(main_colors).colors(8);
 
-function draw_pallet(){
-    fit_colors = [];
-    fit_colors = chroma
-    .scale(main_colors)
-    .colors(8);
+      document.getElementById("pallet_block").innerHTML = "";
 
-    document.getElementById('pallet_block').innerHTML = "";
+      var fit_colors_new = [];
 
-    var fit_colors_new = [];
+      fit_colors.forEach((element) => {
+        var base = new KolorWheel(element);
 
-    fit_colors.forEach(element => {
+        var h = 0;
 
-var base = new KolorWheel(element);
-  
-var h = 0;
+        var hsl = base.getHsl();
 
-var hsl = base.getHsl();
+        for (var n = 0; n < 5; n++) {
+          var color = new KolorWheel([hsl[0] + h, hsl[1], hsl[2]]);
 
-for (var n = 0; n < 5; n++) {
+          h += 45;
 
-  var color = new KolorWheel([hsl[0]+h,hsl[1],hsl[2]]);
-  
-  h += 45;
+          fit_colors_new.push(color.getHex());
+        }
+      });
 
-  fit_colors_new.push(color.getHex());
+      fit_colors_new.forEach((element) => {
+        document.getElementById("pallet_block").innerHTML +=
+          "<span onclick='useColor(event);' class='color_thumb' style='background-color:" +
+          element +
+          ";'></span>";
+      });
+    }
 
-} 
-        
+    function componentToHex(c) {
+      var hex = c.toString(16);
+      return hex.length == 1 ? "0" + hex : hex;
+    }
 
-    });
+    function rgbToHex(r, g, b) {
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
 
+    function useColor(e) {
+      var color = e.target.style.backgroundColor;
 
-    fit_colors_new.forEach(element => {
-        
-        document.getElementById('pallet_block').innerHTML+="<span onclick='useColor(event);' class='color_thumb' style='background-color:"+element+";'></span>";
+      document.getElementById("main_wall").style.backgroundColor = color;
+    }
 
-    });
+    function useCustomColor(e) {
+      var color = e.target.value;
 
-  
-}
+      document.getElementById("main_wall").style.backgroundColor = color;
+    }
 
-function componentToHex(c) {
-  var hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
-}
+    function referImage(e) {
+      if (e.target.checked == true) {
+        document.getElementById("ref_img").style.display = "block";
+      } else {
+        document.getElementById("ref_img").style.display = "none";
+      }
 
-function rgbToHex(r, g, b) {
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
+      scale();
+    }
 
-function useColor(e){
+    function marginP(e) {
+      document.getElementById("ref_img").style.left =
+        parseFloat(
+          window.getComputedStyle(document.getElementById("ref_img")).left
+        ) +
+        10 +
+        "px";
+    }
+    function marginM(e) {
+      document.getElementById("ref_img").style.left =
+        parseFloat(
+          window.getComputedStyle(document.getElementById("ref_img")).left
+        ) -
+        10 +
+        "px";
+    }
 
-    var color = e.target.style.backgroundColor;
-    
-    document.getElementById("main_wall").style.backgroundColor = color;
-}
+    function scale() {
+      var main_img_w_coef = document.getElementById("ref_img").height / 182;
 
+      var wh_coef =
+        document.getElementById("main_img").height /
+        document.getElementById("main_img").width;
 
-function useCustomColor(e){
+      var new_w =
+        document.getElementById("width-input").value * main_img_w_coef;
 
-    var color = e.target.value;
-    
-    document.getElementById("main_wall").style.backgroundColor = color;
+      var new_h = new_w * wh_coef;
 
-}
+      var ref_w = document.getElementById("ref_img").width;
 
-function referImage(e){
+      var ref_h = document.getElementById("ref_img").height;
 
-if(e.target.checked == true){
-    document.getElementById("ref_img").style.display = "block";
-}else{
-    document.getElementById("ref_img").style.display = "none";
-}
+      if (document.getElementById("scale_image").checked == true) {
+        document.getElementById("margin_wrap").style.display = "inline-block";
+        document.getElementById("width_wrap").style.display = "inline-block";
 
-scale();
+        document.getElementById("main_img").height = "auto";
+        document.getElementById("main_img").style.height = "auto";
 
-}
+        var _vw = window.innerWidth / new_w;
 
+        vw = 100 / _vw;
 
-function scale(){
+        if (new_h < ref_h - 80) {
+          document.getElementById("main_img").style.marginTop = "5vw";
 
-var main_img_w_coef = document.getElementById("ref_img").height / 182;
+          document.getElementById("main_img").width = vw + "vw";
+          document.getElementById("main_img").style.width = vw + "vw";
 
-var wh_coef = document.getElementById("main_img").height / document.getElementById("main_img").width;
+          document.getElementById("ref_img").height = "30vw";
+          document.getElementById("ref_img").style.height = "30vw";
+        } else {
+          document.getElementById("main_img").style.marginTop = "2vw";
 
-var new_w = (document.getElementById("width-input").value * main_img_w_coef);
+          document.getElementById("main_img").width = "auto";
+          document.getElementById("main_img").style.width = "auto";
+          document.getElementById("main_img").height = "25vw";
+          document.getElementById("main_img").style.height = "25vw";
 
-var new_h = new_w * wh_coef;
+          var img_w_coef =
+            document.getElementById("main_img").width /
+            document.getElementById("width-input").value;
 
-var ref_w = document.getElementById("ref_img").width;
+          document.getElementById("ref_img").height = 182 * img_w_coef + "px";
+          document.getElementById("ref_img").style.height =
+            182 * img_w_coef + "px";
+        }
+      } else {
+        document.getElementById("width_wrap").style.display = "none";
+        document.getElementById("margin_wrap").style.display = "none";
+      }
 
-var ref_h = document.getElementById("ref_img").height;
+      window.onresize = function () {
+        scale();
+      };
+    }
 
-if(document.getElementById("scale_image").checked == true){
-
-    document.getElementById("width_wrap").style.display = "inline-block";
-    
-document.getElementById("main_img").height = "auto";    
-document.getElementById("main_img").style.height = "auto"; 
-
-var _vw =  window.innerWidth / new_w;
-
-vw = 100/_vw;
-
-
-
-if(new_h < ref_h-80){   
-    document.getElementById("main_img").style.marginTop = "5vw";
-
-    document.getElementById("main_img").width = vw + "vw";
-    document.getElementById("main_img").style.width = vw + "vw";
-    
-    document.getElementById("ref_img").height = "30vw";
-    document.getElementById("ref_img").style.height = "30vw";
-
-}else{
-
-    document.getElementById("main_img").style.marginTop = "2vw";
-
-    document.getElementById("main_img").width = "auto";
-    document.getElementById("main_img").style.width = "auto";
-    document.getElementById("main_img").height = "25vw";
-    document.getElementById("main_img").style.height = "25vw";
-
-    var img_w_coef = document.getElementById("main_img").width / document.getElementById("width-input").value;
-    
-    document.getElementById("ref_img").height = 182 * img_w_coef + "px";
-    document.getElementById("ref_img").style.height = 182 * img_w_coef + "px";
-    
-
-}
-
-}else{
-
-    document.getElementById("width_wrap").style.display = "none";
-
-}
-
-window.onresize = function(){ scale() };
-
-}
-
-
-function addFrame(e){
-
-    if(document.getElementById("frame_inp").checked == true){
-
+    function addFrame(e) {
+      if (document.getElementById("frame_inp").checked == true) {
         document.getElementById("main_img").style.border = "1vw groove #402607";
-
-    }else{
-
+      } else {
         document.getElementById("main_img").style.border = "none";
-
+      }
     }
 
+    function showPicture(e) {
+      const Items = document.querySelectorAll("#paint_list li");
 
-}
+      Items.forEach(function (Item) {
+        Item.style.color = "black";
+      });
 
-function showPicture(e){
+      e.target.style.color = "blue";
 
-const Items = document.querySelectorAll("#paint_list li");
+      if (e.target.attributes["data-width"].value) {
+        document.getElementById("width-input").value = Number(
+          e.target.attributes["data-width"].value
+        );
 
-Items.forEach(function(Item) {
-Item.style.color = "black"; 
+        document.getElementById("main_img").src =
+          "img/" + e.target.attributes["data-src"].value;
 
-});
+        document.getElementById("list_loading").innerText = "Loading...";
 
-e.target.style.color = "blue";    
+        document.getElementById("main_img").onload = function () {
+          document.getElementById("scale_image").checked = true;
+          document.getElementById("ref_img").style.display = "block";
 
-if(e.target.attributes['data-width'].value){
-document.getElementById("width-input").value = Number(e.target.attributes['data-width'].value);
+          scale();
+          document.getElementById("main_wall").style.backgroundColor =
+            "antiquewhite";
 
-document.getElementById("main_img").src = "img/"+e.target.attributes['data-src'].value;
+          var img = new Image();
 
-document.getElementById("list_loading").innerText = "Loading...";
+          img.onload = function () {
+            canvas.width = img.width * devicePixelRatio;
+            canvas.height = img.height * devicePixelRatio;
+            canvas.style.width = `${img.width}px`;
+            canvas.style.height = `${img.height}px`;
 
-document.getElementById("main_img").onload = function(){
+            document.getElementById("list_loading").innerText = "";
 
-    
-    
+            render(img, () => {
+              console.log("OK");
+            });
+          };
 
-    document.getElementById("scale_image").checked = true;
-    document.getElementById("ref_img").style.display = "block";
-
-    scale();
-    document.getElementById("main_wall").style.backgroundColor = "antiquewhite";
-
-
-    var img = new Image();
-
-    img.onload = function(){
-    
-
-    canvas.width = img.width * devicePixelRatio;
-	canvas.height = img.height * devicePixelRatio;
-	canvas.style.width = `${img.width}px`;
-	canvas.style.height = `${img.height}px`;
-
-    document.getElementById("list_loading").innerText = "";
-
-    render(img, () => {
-	      	console.log("OK");
-              
-	    });
-
+          img.src = document.getElementById("main_img").src;
+        };
+      }
     }
-
-    
-    img.src = document.getElementById("main_img").src;
-}
-
-}
-}
-
-
-
-</script>
-
+  </script>
 </html>
